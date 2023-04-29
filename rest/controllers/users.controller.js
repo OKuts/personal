@@ -58,4 +58,16 @@ export class UsersController {
     currentUser (req, res) {
         res.send(`<h1>${this.service.current()}</h1>`)
     }
+
+    async userValidation (req, res, next) {
+        try {
+            const token = req.headers.authorization?.split(' ')[1]
+            const {id} = jwt.verify(token, process.env.JWT_SECRET)
+            const user = await this.service.getUserById(id)
+            req.user = user
+            next()
+        } catch (e) {
+            return res.status(401).json({message: 'unauthorized'})
+        }
+    }
 }
