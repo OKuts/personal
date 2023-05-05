@@ -1,61 +1,60 @@
-import {UsersService} from '../services/users.service.js'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+import {EmployeesService} from '../services/employees.service.js'
 
-export class UsersController {
+export class EmployeesController {
     constructor() {
-        this.service = new UsersService()
+        this.service = new EmployeesService()
     }
-    async loginUser (req, res) {
-        const {email, password} = req.body
-        if (!email || !password) {
-            return res.status(400).json({message: 'Uncorrected data'})
-        }
 
-        const user = await this.service.getUser(email)
-
-        const isPasswordCorrect = user && (await bcrypt.compare(password, user.password))
-        if (user && isPasswordCorrect) {
-            res.status(200).json({
-                id: user.id,
-                email: user.email,
-                name: user.name,
-            })
-        } else {
-            return res.status(400).json({message: 'Uncorrected login or password'})
+    async getAllEmployees (req, res) {
+        try {
+            const employees = await this.service.getAll()
+            res.status(200).json(employees)
+        } catch (e) {
+            res.status(400).json({message: 'failed to get employees'})
         }
     }
 
-    async registerUser (req, res) {
-        const {email, password, name} = req.body
-
-        if (!email || !password || !name) {
-            return res.status(400).json({message: 'Uncorrected data'})
-        }
-
-        const registeredUser = await this.service.getUser(email)
-
-        if (registeredUser) {
-            return res.status(400).json({message: `User with email: ${email} already exist`})
-        }
-
-        const user = await this.service.registerUser(email, password, name)
-
-        const secret = process.env.JWT_SECRET
-
-        if (user && secret) {
-            res.status(200).json({
-                id: user.id,
-                email: user.email,
-                name,
-                token: jwt.sign({id: user.id}, secret, {expiresIn: '30d'})
-            })
-        } else {
-            return res.status(400).json({message: 'Failed to create user'})
+    async getEmployee (req, res) {
+        try {
+            const {id} = req.params
+            const employee = await this.service.getOne(id)
+            res.status(200).json(employee)
+        } catch (e) {
+            res.status(400).json({message: 'failed to get employee'})
         }
     }
 
-    currentUser (req, res) {
-        res.send(JSON.stringify(req.user))
+    async addEmployee (req, res) {
+        try {
+            const {firstName, lastName, address, age} = req.body
+            if (!firstName || !lastName || !address || !age) {
+                res.status(400).json({message: 'all fields are required'})
+            }
+            const employee = await this.service.addEmployee(req.body, req.user.id)
+
+            res.status(200).json(employee)
+        } catch (e) {
+            res.status(400).json({message: 'failed to get employees'})
+        }
+    }
+
+    async removeEmployee (req, res) {
+        try {
+            const {id} = req.params
+            await this.service.removeEmployee(id)
+            res.status(200).json({message: 'Ok'})
+        } catch (e) {
+            res.status(400).json({message: 'failed to delete employee'})
+        }
+    }
+
+    async editEmployee (req, res) {
+        try {
+            const {id} = req.params
+            await this.service.editEmployee(id, req.body)
+            res.status(200).json({message: 'Ok'})
+        } catch (e) {
+            res.status(400).json({message: 'failed to edit employee'})
+        }
     }
 }

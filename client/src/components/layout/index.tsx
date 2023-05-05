@@ -1,7 +1,7 @@
-import React, {FC, ReactNode} from 'react';
+import React, {FC, ReactNode} from 'react'
 import {Layout as AntLayout} from 'antd'
-import st from './layout.module.scss';
-import {Header} from "../header";
+import st from './layout.module.scss'
+import {Header} from '../header'
 
 type Props = {
     children: ReactNode
@@ -15,5 +15,5 @@ export const Layout: FC<Props> = ({children}) => {
                 {children}
             </AntLayout.Content>
         </div>
-    );
+    )
 }

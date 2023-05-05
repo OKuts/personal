@@ -1,5 +1,5 @@
-import {Link} from "react-router-dom";
-import {FC, ReactNode} from "react";
+import {Link} from 'react-router-dom'
+import {FC, ReactNode} from 'react'
 
 type Props = {
     to: string,
@@ -11,5 +11,5 @@ export const CustomLink: FC<Props> = ({to, children}) => {
         <Link to={to}>
             {children}
         </Link>
-    );
+    )
 }

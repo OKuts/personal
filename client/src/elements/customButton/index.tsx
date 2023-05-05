@@ -10,6 +10,7 @@ type Props = {
     shape?: 'default' | 'circle' | 'round' | undefined,
     icon?: ReactNode,
     onClick?: () => void
+    htmlType?: 'button' | 'submit' | 'reset'
 }
 export const CustomButton: FC<Props> = (
     {
@@ -19,7 +20,8 @@ export const CustomButton: FC<Props> = (
         loading,
         shape = 'default',
         icon,
-        onClick
+        onClick,
+        htmlType
     }) => {
 
     return (
@@ -30,6 +32,7 @@ export const CustomButton: FC<Props> = (
             shape={shape}
             icon={icon}
             onClick={onClick}
+            htmlType={htmlType}
         >
             {children}
         </Button>

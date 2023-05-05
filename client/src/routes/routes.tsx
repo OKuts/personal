@@ -1,6 +1,8 @@
-import {createBrowserRouter} from "react-router-dom";
-import {Home, Login, Register} from "../components";
-import React from "react";
+import {createBrowserRouter} from 'react-router-dom'
+import React from 'react'
+import {Home} from '../pages/home/Home'
+import {Login} from '../pages/login/Login'
+import {Register} from '../pages/register/Register'
 
 export const route = {
     home: '/',
