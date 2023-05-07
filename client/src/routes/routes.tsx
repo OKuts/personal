@@ -1,8 +1,7 @@
 import {createBrowserRouter} from 'react-router-dom'
 import React from 'react'
-import {Home} from '../pages/home/Home'
-import {Login} from '../pages/login/Login'
-import {Register} from '../pages/register/Register'
+import {ErrorPage, Home, Login, Register} from '../pages'
+
 
 export const route = {
     home: '/',
@@ -11,11 +10,13 @@ export const route = {
     employee: '/employee',
     status: '/status',
     login: '/login',
-    register: '/register'
+    register: '/register',
+    error: '/error'
 } as const
 
 export const router = createBrowserRouter([
     {path: route.home, element: <Home/>},
     {path: route.login, element: <Login/>},
     {path: route.register, element: <Register/>},
+    {path: route.error, element: <ErrorPage/>},
 ])
