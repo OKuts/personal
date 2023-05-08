@@ -1,15 +1,13 @@
-import {User} from '@prisma/client'
 
-export type TLoginData = Omit<User, 'id' | 'name'>
-
-export const currentUser = async (data: TLoginData) => {
+export const currentUser = async (token: string) => {
     const response = await fetch('http://localhost:8000/api/users/current', {
         headers: {
-            'Authorization': 'application/json'
+            'Authorization': `Bearer ${token}`
         }
     })
     const userData = await response.json()
     if (response.status !== 200) throw new Error(userData?.message)
 
-    return userData
+    const {email, name} = userData
+    return {email, name}
 }

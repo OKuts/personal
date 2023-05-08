@@ -11,7 +11,7 @@ export const route = {
     status: '/status',
     login: '/login',
     register: '/register',
-    error: '/error'
+    error: '/error',
 } as const
 
 export const router = createBrowserRouter([

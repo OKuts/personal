@@ -1,21 +1,31 @@
 import React, {FC, useEffect} from 'react'
-import {Layout} from '../../components/layout'
-import {useSelector} from 'react-redux'
-import {TAuth} from '../../store/slices/auth.slice'
+import {useDispatch, useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
+
+import {Layout} from '../../components/layout'
 import {route} from '../../routes/routes'
+import {currentUser} from '../../api/currentUser'
+import {setCurrentUser} from '../../store/slices/auth.slice'
 
 export const Home: FC = () => {
     const navigate = useNavigate()
-    const {token} = useSelector((state: any) => state.auth)
+    const dispatch = useDispatch()
+    const {token, current} = useSelector((state: any) => state.auth)
 
-    useEffect(()=>{
+    const getCurrentUser = async (token: string) => {
+        const user = await currentUser(token)
+        dispatch(setCurrentUser(user))
+    }
+
+    useEffect(() => {
         if (!token) navigate(route.login)
+        getCurrentUser(token).then()
     }, [])
 
     return (
         <Layout>
             <div>Home</div>
+            {JSON.stringify(current)}
         </Layout>
     )
 }
