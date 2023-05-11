@@ -7,10 +7,11 @@ import {route} from '../../routes/routes'
 import {useDispatch, useSelector} from 'react-redux'
 import {outUser} from '../../store/slices/auth.slice'
 import st from './header.module.scss'
+import {RootState} from '../../store/store'
 
 export const Header: FC = () => {
     const dispatch = useDispatch()
-    const {current} = useSelector((state: any) => state.auth)
+    const {user} = useSelector((state: RootState) => state.auth)
 
 
     return (
@@ -23,15 +24,15 @@ export const Header: FC = () => {
                     </CustomButton>
                 </CustomLink>
             </Space>
-            {current
+            {user
                 ?
-                <Space >
-                    <span>{current.name}</span>
+                <Space>
+                    <span>{user.id}</span>
                     <CustomLink to={route.login}>
                         <CustomButton
                             type={'link'}
                             icon={<LogoutOutlined/>}
-                            onClick={()=> dispatch(outUser())}
+                            onClick={() => dispatch(outUser())}
                         >
                             Out
                         </CustomButton>

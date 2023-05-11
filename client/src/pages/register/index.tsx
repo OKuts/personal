@@ -4,19 +4,22 @@ import {Card, Form, Row, Space, Typography} from 'antd'
 import {CustomButton, CustomInput, CustomLink, PasswordInput} from '../../elements'
 
 import {route} from '../../routes/routes'
-import {registerUser, TRegisterData} from '../../api/registerUser'
 import {useNavigate} from 'react-router-dom'
+import {useRegisterMutation} from '../../api/auth.api'
+import {isMessageInError} from '../../utils/isMessageInError'
+import {TUserState} from '../../types/userTypes'
 
 export const Register: FC = () => {
     const navigate = useNavigate()
-    const register = async (data: TRegisterData) => {
-        const {name, email, password} = data
+    const [registerUser] = useRegisterMutation()
+    const register = async (data: TUserState) => {
         try {
-            const user = await registerUser({name, email, password})
-            localStorage.setItem('token', user.token)
+            await registerUser(data)
             navigate(route.home)
-        } catch (e) {
-            navigate(route.error, {state: e})
+        } catch (err) {
+            navigate(route.error,
+                {state: isMessageInError(err) ? err.data.message : 'Unknown error'}
+            )
         }
     }
 

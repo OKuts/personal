@@ -1,36 +1,45 @@
 import {createSlice} from '@reduxjs/toolkit'
-import {TAuthState, TUser} from '../../types/userTypes'
-
+import {TAuthState} from '../../types/userTypes'
+import {authApi} from '../../api/auth.api'
+import {RootState} from '../store'
 
 const initialState: TAuthState = {
-    token: localStorage.getItem('token'),
-    current: null
+    user: null,
+    isAuthenticated: false,
 }
 
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        authUser: (state, {payload}) => {
-            const {name, email}: TUser = payload
-            state.current = {name, email}
-            state.token = payload.token
-        },
-
-        setCurrentUser: (state, {payload}) => {
-            const {name, email}: TUser = payload
-            state.current = {name, email}
-        },
-
-        outUser: (state) => {
+        outUser: () => {
             localStorage.removeItem('token')
-            state.current = null
-            state.token = null
+            return initialState
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addMatcher(authApi.endpoints.login.matchFulfilled,(state, {payload})=>{
+                state.user = payload
+                state.isAuthenticated = true
+            })
+            .addMatcher(authApi.endpoints.register.matchFulfilled,(state, {payload})=>{
+                state.user = payload
+                state.isAuthenticated = true
+            })
+            .addMatcher(authApi.endpoints.current.matchFulfilled,(state, {payload})=>{
+                state.user = payload
+                state.isAuthenticated = true
+            })
     }
 })
 
-export const {authUser, setCurrentUser, outUser} = authSlice.actions
+export const {outUser} = authSlice.actions
+export const authActions = authSlice.actions
+
+export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated
+export const selectUser = (state: RootState) => state.auth.user
+
 export default authSlice.reducer
 
 

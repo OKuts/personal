@@ -1,13 +1,21 @@
 import {configureStore} from '@reduxjs/toolkit'
 import authReducer from './slices/auth.slice'
-import employeeReducer from './slices/employee.slice'
+import {api} from '../api/api'
+import {setupListeners} from '@reduxjs/toolkit/query'
+import {listenerMiddleware} from './meddlewares/saveStorage'
 
 export const store = configureStore({
     reducer: {
+        [api.reducerPath]: api.reducer,
         auth: authReducer,
-        employee: employeeReducer
-    }
+    },
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware()
+            .concat(api.middleware)
+            .prepend(listenerMiddleware.middleware)
 })
+
+setupListeners(store.dispatch)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

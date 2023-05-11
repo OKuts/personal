@@ -1,8 +1,11 @@
 import {User} from '@prisma/client'
 
-export type TUser = Omit<User, 'password' | 'id'>
+export type TUserData = Omit<User, 'password' | 'id'>
+export type TLoginData = Omit<User, 'id' | 'name'>
+export type TUserState = User & {token: string}
 
 export type TAuthState = {
-    token: string | null
-    current: TUser | null
+    user: TUserState | null
+    isAuthenticated: boolean
 }
+

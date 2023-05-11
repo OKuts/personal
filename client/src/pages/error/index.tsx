@@ -5,7 +5,7 @@ import {useLocation, useNavigate} from 'react-router-dom'
 import {route} from '../../routes/routes'
 
 export const ErrorPage: FC = () => {
-    const {message} = useLocation().state || null
+    const message = useLocation().state || null
     const navigate = useNavigate()
     return (
         <Layout>
