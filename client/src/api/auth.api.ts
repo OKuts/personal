@@ -1,5 +1,4 @@
 import {api} from './api'
-import {User} from '@prisma/client'
 import {TLoginData, TUserData, TUserState} from '../types/userTypes'
 
 export const authApi = api.injectEndpoints({

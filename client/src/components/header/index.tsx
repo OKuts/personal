@@ -1,18 +1,16 @@
 import React, {FC} from 'react'
 import {Layout, Space, Typography} from 'antd'
+import {useQuery} from '@tanstack/react-query'
 import {LoginOutlined, LogoutOutlined, TeamOutlined, UserOutlined} from '@ant-design/icons'
-
 import {CustomButton, CustomLink} from '../../elements'
 import {route} from '../../routes/routes'
-import {useDispatch, useSelector} from 'react-redux'
-import {outUser} from '../../store/slices/auth.slice'
 import st from './header.module.scss'
-import {RootState} from '../../store/store'
+import {Api} from '../../api/myApi'
 
 export const Header: FC = () => {
-    const dispatch = useDispatch()
-    const {user} = useSelector((state: RootState) => state.auth)
+    const {data, isLoading, isError} = useQuery(['auth'], Api.getCurrentUser)
 
+    console.log(data, isLoading, isError)
 
     return (
         <Layout.Header className={st.header}>
@@ -24,15 +22,15 @@ export const Header: FC = () => {
                     </CustomButton>
                 </CustomLink>
             </Space>
-            {user
+            {data?.id
                 ?
                 <Space>
-                    <span>{user.id}</span>
+                    <span>{data.id}</span>
                     <CustomLink to={route.login}>
                         <CustomButton
                             type={'link'}
                             icon={<LogoutOutlined/>}
-                            onClick={() => dispatch(outUser())}
+                            onClick={() => null}
                         >
                             Out
                         </CustomButton>
